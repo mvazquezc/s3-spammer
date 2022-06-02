@@ -22,21 +22,19 @@ spec:
         app: s3-spammer
     spec:
       serviceAccountName: default
-      hostPID: true
-      hostNetwork: true
       containers:
       - name: s3-spammer
-        imagePullPolicy: Always
-        image: quay.io/mavazque/s3-spammer:latest
+        imagePullPolicy: IfNotPresent
+        image: quay.io/mavazque/storage-spammer:s3
         args:
-        - --files
-        - 10
-        - --wait-time
-        - 10
-        - --file-size
-        - 100
-        - --bucket-name
-        - s3-spammer-bucket
+        - "--files"
+        - "10"
+        - "--wait-time"
+        - "10"
+        - "--file-size"
+        - "100"
+        - "--bucket-name"
+        - "s3-spammer-bucket"
         env:
           - name: S3_ENDPOINT
             value: "https://s3.openshift-storage.svc"

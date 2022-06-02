@@ -22,8 +22,11 @@ def generate_file(filename, size, logger):
         unit = "B"
     
     with open('%s'%filename, 'wb') as generated_file:
-        generated_file.write(os.urandom(int(byte_size)))
-        logger.debug("Wrote %s%s to file %s", size, unit, filename)
+        try:
+            generated_file.write(os.urandom(int(byte_size)))
+            logger.debug("Wrote %s%s to file %s", size, unit, filename)
+        except Exception as e:
+            logger.error(e)
 
 def gen_file_on_s3(filename, file_size, s3_client, bucket_name, bucket_path, logger):
     generate_file(filename, file_size, logger)
@@ -31,6 +34,11 @@ def gen_file_on_s3(filename, file_size, s3_client, bucket_name, bucket_path, log
     logger.info("Pushing %s to bucket %s into %s folder", object_name, bucket_name, bucket_path)
     s3_client.upload(bucket_name, filename, object_name, bucket_path)
 
+def gen_file_on_disk(filename, file_size, file_path, logger):
+    file_name = str(int(time.time())) + '-' + filename
+    file_destination = file_path + file_name
+    generate_file(file_destination, file_size, logger)
+    logger.info("Creating %s into %s folder", file_name, file_path)
 
 class Logger():
     def __init__(self, logger_name, logger_level):

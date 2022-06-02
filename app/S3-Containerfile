@@ -1,0 +1,10 @@
+FROM python:3
+WORKDIR /app
+ADD requirements.txt .
+RUN pip install -r requirements.txt
+ADD s3-spammer.py .
+ADD lib ./lib
+# Since OCP will generate random UIDs we need /app to be world-writable
+RUN chown -R 1024:1024 /app && chmod 777 /app
+USER 1024
+ENTRYPOINT ["python", "-u", "./s3-spammer.py"]
