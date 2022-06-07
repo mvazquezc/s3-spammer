@@ -4,7 +4,7 @@ import logging
 import re
 import time
 
-def generate_file(filename, size, logger):
+def file_size_unit(size, logger):
     if not re.match(r"^([0-9].*)([A-Z])", str(size)):
         logger.error("Bad size received: %s, setting size to 1M", size)
         size = "1M"
@@ -13,13 +13,17 @@ def generate_file(filename, size, logger):
     unit = unit.group(2)
     logger.debug("Size: %s, Unit: %s", size, unit)
     if unit == "K":
-        byte_size = int(size) * 1024
+        byte_size = float(size) * 1024
     elif unit == "M":
-        byte_size = int(size) * 1024 * 1024
+        byte_size = float(size) * 1024 * 1024
     elif unit == "G":
-        byte_size = int(size) * 1024 * 1024 * 1024
+        byte_size = float(size) * 1024 * 1024 * 1024
     else:
         unit = "B"
+    return byte_size, unit
+
+def generate_file(filename, size, logger):
+    byte_size, unit = file_size_unit(size, logger)
     
     with open('%s'%filename, 'wb') as generated_file:
         try:

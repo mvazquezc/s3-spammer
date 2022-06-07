@@ -9,7 +9,7 @@ parser = argparse.ArgumentParser(description='Spam an S3 bucket.')
 parser.add_argument('-f', '--files', type=int, help='The number of files that will be created in the bucket.', required=True)
 parser.add_argument('-m', '--max-workers', type=int, help='The number of concurrent threads that will run. If not set, concurrent threads will equal number of files', required=False)
 parser.add_argument('-w', '--wait-time', type=int, help='Number of seconds to wait between executions.', required=True)
-parser.add_argument('-s', '--file-size', type=int, help='Size (in MiB) for the generated files.', required=True)
+parser.add_argument('-s', '--file-size', type=str, help='Size for the generated files. It supports the size+units format (Defaults to M). e.g: 100M|10K|1G', required=True)
 parser.add_argument('-b', '--bucket-name', type=str, help='Name of the bucket where files will be pushed.', required=True)
 parser.add_argument('-p', '--bucket-path', type=str, help='Path within the bucket where files will be pushed.', required=False)
 
@@ -20,7 +20,7 @@ logger = logging.new_logger()
 
 number_of_files = args.files
 wait_time = args.wait_time
-file_size = str(args.file_size) + 'M'
+file_size = str(args.file_size)
 bucket_name = args.bucket_name
 bucket_path = args.bucket_path
 num_workers = args.max_workers
